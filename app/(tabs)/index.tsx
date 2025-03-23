@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Pressable, FlatList } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Pressable } from 'react-native';
 import { useAppSelector } from '@/store';
 import { LinearGradient } from 'expo-linear-gradient';
 import BellIcon from '@/components/beije/ui-from-figma/BellIcon';
-import CycleTracker from '@/components/beije/CycleTracker';
 import TodaysHighlightsBottomSheet from '@/components/beije/TodaysHighlightsBottomSheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import MentrationCycle from '@/components/beije/cycle/MenstrationCycle';
+import ChevronDown from '@/components/beije/cycle/ChecronDown';
 
 export default function CycleScreen() {
   const profile = useAppSelector(state => state.profile)
   const [isBottomSheetExpanded, setIsBottomSheetExpanded] = useState(false);
 
-  // Handle bottom sheet expansion state
   const handleSheetExpand = (isExpanded: boolean) => {
     setIsBottomSheetExpanded(isExpanded);
   };
@@ -23,7 +23,6 @@ export default function CycleScreen() {
         style={styles.gradient}
       >
         <SafeAreaView style={styles.container}>
-          {/* Profile icon and notification icon could go here */}
           <View style={styles.header}>
             <View style={styles.profileIcon}>
               <Text style={styles.profileText}>
@@ -39,12 +38,36 @@ export default function CycleScreen() {
             </View>
           </View>
 
-          {profile.menstrationDays && (
-            <CycleTracker
-              cycleData={profile.menstrationDays}
-              isExpanded={isBottomSheetExpanded}
-            />
-          )}
+          <View style={[
+            styles.cycleContainer,
+            isBottomSheetExpanded && styles.cycleContainerExpanded
+          ]}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              marginBottom: isBottomSheetExpanded ? -10 : -30,
+              textAlign: 'center'
+            }}>
+              {new Date().getDate()} {new Date().toLocaleString('tr-TR', { month: 'long' })}
+            </Text>
+
+            {isBottomSheetExpanded ? (
+              <>
+                <View style={{ marginTop: 10 }}>
+                  <ChevronDown />
+                </View>
+                <MentrationCycle
+                  menstrationData={profile.menstrationDays?.data}
+                  style={styles.cycleVisualizationSmall}
+                />
+              </>
+            ) : (
+              <MentrationCycle
+                menstrationData={profile.menstrationDays?.data}
+                style={styles.cycleVisualization}
+              />
+            )}
+          </View>
 
           <TodaysHighlightsBottomSheet
             insights={profile.insights ?? undefined}
@@ -98,13 +121,40 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    marginBottom: 40,
   },
-  dateText: {
-    fontSize: 18,
+  cycleContainerExpanded: {
+    marginBottom: 0,
+    justifyContent: 'flex-start',
+    paddingTop: 10,
+    marginTop: -20,
+  },
+  cycleVisualization: {
+    alignSelf: 'center',
+  },
+  cycleVisualizationSmall: {
+    alignSelf: 'center',
+    transform: [{ scale: 0.7 }],
+    marginTop: -70,
+  },
+  cycleVisualizationDetailed: {
+    alignSelf: 'center',
+    transform: [{ scale: 0.8 }],
+    marginTop: -15,
+  },
+  expandedCycleView: {
+    alignItems: 'center',
+    marginBottom: 0,
+  },
+  secondaryCycleView: {
+    alignItems: 'center',
+    marginTop: -15,
+  },
+  secondaryCycleTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
+    color: '#333',
   },
   contentContainer: {
     flex: 1,
