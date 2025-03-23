@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import BottomSheet, { BottomSheetView, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 import { IInsightResponse } from '@/models/IInsightResponse';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import InsightDot from './ui-from-figma/InsightDot';
@@ -28,11 +28,10 @@ const TodaysHighlightsBottomSheet: React.FC<TodaysHighlightsProps> = ({
     // callbacks
     const handleSheetChanges = useCallback((index: number) => {
         console.log('handleSheetChanges', index);
-        const expanded = index === 1; // 1 is the index for 65%
+        const expanded = index === 1;
         setIsExpanded(expanded);
         setCurrentIndex(index);
 
-        // Notify parent component about expansion state
         if (onSheetExpand) {
             onSheetExpand(expanded);
         }
