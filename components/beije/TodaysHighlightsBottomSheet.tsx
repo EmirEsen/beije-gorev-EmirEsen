@@ -14,20 +14,14 @@ const TodaysHighlightsBottomSheet: React.FC<TodaysHighlightsProps> = ({
     insights,
     onSheetExpand
 }) => {
-    // // Get safe area insets to adjust for tab bar
     const insets = useSafeAreaInsets();
-    // ref
     const bottomSheetRef = useRef<BottomSheet>(null);
-    // Make the first snap point higher to ensure visibility
     const snapPoints = useMemo(() => ['17.8%', '65%'], []);
-    // Track expanded state
     const [isExpanded, setIsExpanded] = useState(false);
-    // Track the current index
     const [currentIndex, setCurrentIndex] = useState(0);
 
     // callbacks
     const handleSheetChanges = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
         const expanded = index === 1;
         setIsExpanded(expanded);
         setCurrentIndex(index);
@@ -37,9 +31,7 @@ const TodaysHighlightsBottomSheet: React.FC<TodaysHighlightsProps> = ({
         }
     }, [onSheetExpand]);
 
-    // Handle attempt to drag beyond index 1
     const handleAnimate = useCallback((_: number, toIndex: number) => {
-        // If trying to go beyond index 1, force back to index 1
         if (toIndex > 1 && bottomSheetRef.current) {
             bottomSheetRef.current.snapToIndex(1);
             return false;
